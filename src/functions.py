@@ -8,21 +8,21 @@ from skimage import io
 from skimage import segmentation
 from skimage.feature import canny
 import cv2
-import matplotlib; matplotlib.use('Agg') ### for headless execution
-# import matplotlib; matplotlib.use('TkAgg') ### for plotting in interactive mode
+# import matplotlib; matplotlib.use('Agg') ### for headless execution
+import matplotlib; matplotlib.use('TkAgg') ### for plotting in interactive mode
 from matplotlib import pyplot as plt
 
 ### plot image
 def fun_image_show(image, cmap=['viridis','gray','Pastel1'][0], title="", width=5, height=5, dpi=100.0, show_axes=True, save=False):
     ######################################
     ### TEST:
-    # image = io.imread('res/Lolium/1-d7.jpg')
+    # image = io.imread('res/Lr-germination-5.JPG')
     # fun_image_show(image)
     # fun_image_show(image[:,:,0])
     # fun_image_show(image[:,:,0], cmap="Pastel1")
-    # fun_image_show([io.imread('res/Lolium/1-d7.jpg'), io.imread('res/Lolium/10-d7.jpg')])
-    # fun_image_show([io.imread('res/Lolium/1-d7.jpg')[:,:,0], io.imread('res/Lolium/10-d7.jpg')[:,:,1]])
-    # fun_image_show([io.imread('res/Lolium/1-d7.jpg')[:,:,0], io.imread('res/Lolium/10-d7.jpg')[:,:,1]], cmap=["gray", "Pastel2"])
+    # fun_image_show([io.imread('res/Lr-germination-5.JPG'), io.imread('res/Lr-germination-6.JPG')])
+    # fun_image_show([io.imread('res/Lr-germination-5.JPG')[:,:,0], io.imread('res/Lr-germination-6.JPG')[:,:,1]])
+    # fun_image_show([io.imread('res/Lr-germination-5.JPG')[:,:,0], io.imread('res/Lr-germination-6.JPG')[:,:,1]], cmap=["gray", "Pastel2"])
     ######################################
     if isinstance(image, np.ndarray):
         image = [image]
@@ -59,7 +59,7 @@ def fun_image_show(image, cmap=['viridis','gray','Pastel1'][0], title="", width=
 def fun_image_flatten(image, vec_coef=[0.2125, 0.7154, 0.0721], plot=False):
     ########################################################################
     ### TEST:
-    # image = io.imread('res/Lolium/1-d7.jpg')
+    # image = io.imread('res/Lr-germination-5.JPG')
     # # vec_coef = [0.2125, 0.7154, 0.0721] ### grayscale transformation
     # # vec_coef = [1.0, 0.0, 0.0] ### extract red channel
     # vec_coef = [0.0, 1.0, 0.0] ### extract green channel
@@ -95,14 +95,12 @@ def fun_multi_erosion_dilation(image, type=["erosion", "dilation"][0], times=1):
 def fun_detect_plate(image, plate_shape="round", vec_radius_or_height_limit=[1000,2000], vec_width_limit=None, scale_factor=0.05, n_steps=5, central_round_plate=True, plot=False, debug=False):
     #################################################################
     ### TEST:
-    # # image = io.imread('/home/jeff/Documents/seedGermCV/res/Arabidopsis/no_markers/At-no-marker-46-47.jpg')
-    # # image = io.imread('/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-22-41.jpg')
+    # # image = io.imread('res/At-germination-no-marker-1.JPG')
+    # # image = io.imread('res/At-germination-with-marker-2.JPG')
     # plate_shape = "round"
     # vec_radius_or_height_limit = [1000, 2000]
-    # image = io.imread('/home/jeff/Documents/seedGermCV/res/Lolium/1-d2.jpg')
-    # image = io.imread('/home/jeff/Documents/seedGermCV/res/Lolium/0-50.JPG')
-    # image = io.imread('/home/jeff/Documents/seedGermCV/res/Lolium/0-50-rootsOnly.JPG')
-    # image = io.imread('1.c.2-PLATE_17-PHOTO_1-DAY_08.jpg')
+    # image = io.imread('res/Lr-germination-5.JPG')
+    # image = io.imread('res/Lr-germination-5.JPG')
     # plate_shape = "rectangular"
     # vec_radius_or_height_limit = [1500, 2000]
     # vec_width_limit = None
@@ -245,7 +243,7 @@ def fun_detect_plate(image, plate_shape="round", vec_radius_or_height_limit=[100
 def fun_image_crop(image, x0, x1, y0, y1, plot=False):
     ############################
     ### TEST:
-    # image = io.imread('res/Lolium/1-d7.jpg')
+    # image = io.imread('res/Lr-germination-5.JPG')
     # x0 = 1200
     # x1 = 3100
     # y0 = 1900
@@ -264,10 +262,7 @@ def fun_image_crop(image, x0, x1, y0, y1, plot=False):
 def fun_colour_correct(image, vec_RGB_mode_expected=[45, 55, 75], remove_black=True, plot=False):
     ##############################
     ### TEST:
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-no-marker-46-47.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-no-marker-46-49.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-54-54.jpg"
-    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-22-41.jpg"
+    # fname = "res/At-germination-with-marker-2.JPG"
     # plate, mask_plate, y, x, r = fun_detect_plate(io.imread(fname))
     # image = fun_image_crop(plate, x0=x-r, x1=x+r, y0=y-r, y1=y+r)
     # vec_RGB_mode_expected = [45, 55, 75]
@@ -295,7 +290,7 @@ def fun_colour_correct(image, vec_RGB_mode_expected=[45, 55, 75], remove_black=T
 def fun_threshold_compute(flatImage, algo=["isodata", "li", "mean", "minimum", "otsu", "triangle", "yen"][0]):
     ##########################################################################################################
     ### TEST:
-    # image = io.imread('res/Lolium/1-d7.jpg')
+    # image = io.imread('res/Lr-germination-5.JPG')
     # flatImage = fun_image_flatten(image, [0.0, 1.0, 0.0], False)
     # fun_threshold_compute(flatImage)
     # fun_threshold_compute(flatImage, algo="triangle")
@@ -344,7 +339,7 @@ def fun_threshold_compute(flatImage, algo=["isodata", "li", "mean", "minimum", "
 def fun_threshold_optim(flatImage, maxFrac=0.10, plot=False):
     #############################################
     ### TEST:
-    # image = io.imread('res/Lolium/1-d7.jpg')
+    # image = io.imread('res/Lr-germination-5.JPG')
     # flatImage = fun_image_flatten(image, [0.0, 1.0, 0.0], False)
     # maxFrac = 0.10
     # plot = True
@@ -376,9 +371,9 @@ def fun_threshold_optim(flatImage, maxFrac=0.10, plot=False):
 def fun_mask_seedlings(image, dic_flattenTypes={"grayscale":[0.2125, 0.7154, 0.0721], "red":[1.0, 0.0, 0.0], "green":[0.0, 1.0, 0.0]}, dic_fracThesholds={"grayscale":0.10, "red":0.10, "green":0.10}, blur_threshold=2000, plot=False):
     ########################################################################
     ### TEST:
-    # # rawImage = io.imread('res/Lolium/1-d7.jpg')
+    # # rawImage = io.imread('res/Lr-germination-5.JPG')
     # # x0, x1, y0, y1, crop_labeled = find_marker_positions(rawImage)
-    # rawImage = io.imread('res/Arabidopsis/ADA_0285.JPG')
+    # rawImage = io.imread('res/Lr-germination-5.JPG')
     # marker_vec_range_hue = [0.51, 0.66] ## light-blue post-it note markers
     # marker_vec_range_sat = [0.00, 1.00]
     # marker_vec_range_val = [0.75, 1.00]
@@ -425,11 +420,8 @@ def fun_mask_seedlings(image, dic_flattenTypes={"grayscale":[0.2125, 0.7154, 0.0
 def fun_detect_green_shoots(seedlings, shoot_area_limit=[100, 10000], vec_green_hue_limit=[0.15, 0.35], vec_green_sat_limit=[0.3, 1.0], vec_green_val_limit=[0.3, 1.0], plot=False, plot_masks=False, shoot_axis_ratio_min_diff=0.3, debug=False):
     ##################################################################
     ### TEST:
-    # # rawImage = io.imread('res/Lolium/1-d7.jpg')
-    # # rawImage = io.imread('res/Lolium/10-d7.jpg')
-    # # rawImage = io.imread('/home/jeff/Downloads/misc/A5_Tray1_Day5/ADA_0288.JPG')
-    # # rawImage = io.imread('/home/jeff/Downloads/misc/A5_Tray1_Day5/ADA_0289.JPG')
-    # rawImage = io.imread('1.c.2-PLATE_3-PHOTO_1-DAY_10.jpg')
+    # # rawImage = io.imread('res/Lr-germination-5.JPG')
+    # rawImage = io.imread('res/Lr-germination-6.JPG')
     # marker_vec_range_hue = [0.51, 0.66] ## light-blue post-it note markers
     # marker_vec_range_sat = [0.00, 1.00]
     # marker_vec_range_val = [0.75, 1.00]
@@ -651,7 +643,7 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
     ##################################################################
     ### TEST:
     # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-29-51.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-22-41.jpg"
+    # # fname = "res/At-germination-with-marker-2.JPG"
     # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-48-51.jpg"
     # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-45-45.jpg"
     # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-0-49.jpg"
@@ -771,3 +763,57 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
         plt.close()
     ### output
     return(arr_germination)
+
+### seed dimensions
+image = io.imread('res/At-seeds-Col_1-03.JPG')
+shoot_area_limit = [100, 10000]
+max_deviation = 10000
+
+flatImage = fun_image_flatten(image, vec_coef=[0.2125, 0.7154, 0.0721])
+
+
+edges = cv2.adaptiveThreshold(skimage.util.img_as_ubyte(np.uint8(flatImage)),255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,31,5)
+
+edges = fun_multi_erosion_dilation(fun_multi_erosion_dilation(edges, type="dilation"), type="erosion")
+edges = abs(edges - 255)
+contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+vec_area = []
+vec_axisRatio = []
+vec_maxConvexity = []
+for i in range(len(contours)):
+    # i = 639
+    cnt = contours[i]
+     ### moments
+    moments = cv2.moments(cnt)
+    area = moments["m00"]
+    ### filter by area
+    if area < shoot_area_limit[0]:
+        continue
+    elif area > shoot_area_limit[1]:
+        continue
+    ### filter by coinvexity, i.e. to remove overlapping seeds
+    hull = cv2.convexHull(cnt,returnPoints = False)
+    defects = cv2.convexityDefects(cnt,hull)
+    X = np.reshape(defects, (len(defects), 4))
+    vec_deviations = X[:,3]
+    # if sum(vec_deviations > max_deviation) > 0:
+    #     continue
+    ### fit an ellipse to the contour and calculate the ratio between the major and minor axes
+    (x,y), (minorAxisLength, majorAxisLength), angle = cv2.fitEllipse(cnt)
+    axis_ratio = minorAxisLength / (minorAxisLength + majorAxisLength)
+    vec_area.append(area)
+    vec_axisRatio.append(axis_ratio)
+    vec_maxConvexity.append(np.max(vec_deviations))
+    ### annotate image
+    ### append bounding rectangle
+    x, y, w, h = cv2.boundingRect(cnt)
+    cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    ### append text
+    cv2.putText(image, 
+                str(i) + ": " + str(area) + "; " + str(np.max(vec_deviations)),
+                (x+int(w/2),y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2, cv2.LINE_AA)
+
+fun_image_show(image)
+
+
