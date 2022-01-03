@@ -1,6 +1,7 @@
 ### import libraries
 import sys, os
 import numpy as np
+import pandas as pd
 import scipy
 from scipy import ndimage
 import skimage
@@ -765,15 +766,27 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
     return(arr_germination)
 
 ### seed dimensions
-def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviation=500, plot=False):
+def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviation=500, plot=False, dir_output=".", suffix_out="", write_out=False, plot_out=False):
     #############################################
     ### TEST
     # fname = 'res/At-seeds-Col_1-03.JPG'
     # # fname = 'res/At-seeds-Oy_0-04.JPG'
     # shoot_area_limit = [5000, np.Infinity]
     # max_deviation = 500
-    # plot = True
+    # plot=True; dir_output="."; suffix_out=""; write_out=False; plot_out=False
     #############################################
+    ### image extension name or filename suffix
+    extension_name = fname.split(".")[-1]
+    ### output filenames
+    fname_base = os.path.basename(fname)
+    if dir_output==".":
+        dir_output = os.path.dirname(fname)
+    if suffix_out=="":
+        suffix_out=""
+    else:
+        suffix_out = "-" + suffix_out
+    fname_out_csv = os.path.join(dir_output, fname_base.replace("." + extension_name, "-germination_data" + suffix_out + ".csv"))
+    fname_out_jpg = os.path.join(dir_output, fname_base.replace("." + extension_name, "-segmentation" + suffix_out + ".jpg"))
     ### load image
     image = io.imread(fname)
     ### flatten the RGB image into grayscale
@@ -797,9 +810,7 @@ def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviati
     ### find the contours of the flattened image with the filled seed contours
     contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     ### iterate across contours and find the seed areas and dimensions
-    vec_area = []
-    vec_length = [] ### major axis
-    vec_width = [] ### minor axis
+    vec_area_length_width = []
     for i in range(len(contours)):
         # i = 8127
         # print(i)
@@ -831,21 +842,20 @@ def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviati
         label = str(i) + ": " + str(round(area)) + "; " + str(round(majorAxisLength)) + "; " + str(round(minorAxisLength))
         cv2.putText(image, label, (x+int(w/2),y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2, cv2.LINE_AA)
         ### append seed area and dimensions
-        vec_area.append(area)
-        vec_length.append(majorAxisLength)
-        vec_width.append(minorAxisLength)
+        vec_area_length_width.append([fname, area, majorAxisLength, minorAxisLength])
     ### plot
     if plot:
         fun_image_show([edges, image], title=["Edges", "Annotated"])
     ### output
-    return(vec_area, vec_length, vec_width)
-
-
-vec_fnames = ['res/At-seeds-Col_1-03.JPG', 'res/At-seeds-Oy_0-04.JPG']
-for fname in vec_fnames:
-    vec_area, vec_length, vec_width = fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviation=500, plot=True)
-
-# plt.hist(vec_area); plt.show()
-# plt.hist(vec_length); plt.show()
-# plt.hist(vec_width); plt.show()
-
+    OUT = pd.DataFrame(vec_area_length_width, columns=["ID", "area", "length", "width"])
+    if write_out:
+        OUT.to_csv(fname_out_csv, index=False)
+    ### save image segmentation output
+    if plot_out:
+        fun_image_show([edges, image],
+                        title=["Edges", "Annotated"],
+                        width=5, height=5, save=plot_out)
+        plt.savefig(fname_out_jpg)
+        plt.close()
+    ### return
+    return(OUT)
