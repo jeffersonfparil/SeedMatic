@@ -765,55 +765,87 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
     return(arr_germination)
 
 ### seed dimensions
-image = io.imread('res/At-seeds-Col_1-03.JPG')
-shoot_area_limit = [100, 10000]
-max_deviation = 10000
+def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviation=500, plot=False):
+    #############################################
+    ### TEST
+    # fname = 'res/At-seeds-Col_1-03.JPG'
+    # # fname = 'res/At-seeds-Oy_0-04.JPG'
+    # shoot_area_limit = [5000, np.Infinity]
+    # max_deviation = 500
+    # plot = True
+    #############################################
+    ### load image
+    image = io.imread(fname)
+    ### flatten the RGB image into grayscale
+    flatImage = fun_image_flatten(image, vec_coef=[0.2125, 0.7154, 0.0721])
+    ### detect edges of the seeds
+    edges = cv2.adaptiveThreshold(skimage.util.img_as_ubyte(np.uint8(flatImage)),255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,31,5)
+    ### revert
+    edges = abs(edges - 255)
+    ### trying to close holes along the edge of the seeds
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
+    edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+    ### erode and dilate to remove artefacts and restore eroded edges
+    edges = fun_multi_erosion_dilation(
+                fun_multi_erosion_dilation(edges, type="erosion"),
+            type="dilation")
+    ### find initial countours prioir to coutour filling
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    ### fill contours while removing countours that are too small
+    for cnt in contours:
+        cv2.fillPoly(edges, pts =[cnt], color=(255,255,255));
+    ### find the contours of the flattened image with the filled seed contours
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    ### iterate across contours and find the seed areas and dimensions
+    vec_area = []
+    vec_length = [] ### major axis
+    vec_width = [] ### minor axis
+    for i in range(len(contours)):
+        # i = 8127
+        # print(i)
+        cnt = contours[i]
+        ### moments
+        moments = cv2.moments(cnt)
+        area = moments["m00"]
+        ### filter by area
+        if (area < shoot_area_limit[0]) or (area > shoot_area_limit[1]):
+            continue
+        ### filter by coinvexity, i.e. to remove overlapping seeds
+        hull = cv2.convexHull(cnt, returnPoints=False)
+        try:
+            defects = cv2.convexityDefects(cnt,hull)
+        except:
+            continue
+        X = np.reshape(defects, (len(defects), 4))
+        mean_deviation = round(np.mean(X[:,3]))
+        if mean_deviation > max_deviation:
+            continue
+        ### fit an ellipse to the contour and calculate the ratio between the major and minor axes
+        (x,y), (minorAxisLength, majorAxisLength), angle = cv2.fitEllipse(cnt)
+        axis_ratio = minorAxisLength / (minorAxisLength + majorAxisLength)
+        ### annotate image
+        ### append bounding rectangle
+        x, y, w, h = cv2.boundingRect(cnt)
+        cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        ### append text
+        label = str(i) + ": " + str(round(area)) + "; " + str(round(majorAxisLength)) + "; " + str(round(minorAxisLength))
+        cv2.putText(image, label, (x+int(w/2),y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2, cv2.LINE_AA)
+        ### append seed area and dimensions
+        vec_area.append(area)
+        vec_length.append(majorAxisLength)
+        vec_width.append(minorAxisLength)
+    ### plot
+    if plot:
+        fun_image_show([edges, image], title=["Edges", "Annotated"])
+    ### output
+    return(vec_area, vec_length, vec_width)
 
-flatImage = fun_image_flatten(image, vec_coef=[0.2125, 0.7154, 0.0721])
 
+vec_fnames = ['res/At-seeds-Col_1-03.JPG', 'res/At-seeds-Oy_0-04.JPG']
+for fname in vec_fnames:
+    vec_area, vec_length, vec_width = fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviation=500, plot=True)
 
-edges = cv2.adaptiveThreshold(skimage.util.img_as_ubyte(np.uint8(flatImage)),255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,31,5)
-
-edges = fun_multi_erosion_dilation(fun_multi_erosion_dilation(edges, type="dilation"), type="erosion")
-edges = abs(edges - 255)
-contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-vec_area = []
-vec_axisRatio = []
-vec_maxConvexity = []
-for i in range(len(contours)):
-    # i = 639
-    cnt = contours[i]
-     ### moments
-    moments = cv2.moments(cnt)
-    area = moments["m00"]
-    ### filter by area
-    if area < shoot_area_limit[0]:
-        continue
-    elif area > shoot_area_limit[1]:
-        continue
-    ### filter by coinvexity, i.e. to remove overlapping seeds
-    hull = cv2.convexHull(cnt,returnPoints = False)
-    defects = cv2.convexityDefects(cnt,hull)
-    X = np.reshape(defects, (len(defects), 4))
-    vec_deviations = X[:,3]
-    # if sum(vec_deviations > max_deviation) > 0:
-    #     continue
-    ### fit an ellipse to the contour and calculate the ratio between the major and minor axes
-    (x,y), (minorAxisLength, majorAxisLength), angle = cv2.fitEllipse(cnt)
-    axis_ratio = minorAxisLength / (minorAxisLength + majorAxisLength)
-    vec_area.append(area)
-    vec_axisRatio.append(axis_ratio)
-    vec_maxConvexity.append(np.max(vec_deviations))
-    ### annotate image
-    ### append bounding rectangle
-    x, y, w, h = cv2.boundingRect(cnt)
-    cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
-    ### append text
-    cv2.putText(image, 
-                str(i) + ": " + str(area) + "; " + str(np.max(vec_deviations)),
-                (x+int(w/2),y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2, cv2.LINE_AA)
-
-fun_image_show(image)
-
+# plt.hist(vec_area); plt.show()
+# plt.hist(vec_length); plt.show()
+# plt.hist(vec_width); plt.show()
 
