@@ -8,6 +8,15 @@ python src/seed_dimensions.py \
                 -e jpeg \
                 -W 20 \
                 -H 20
+if [ $(cat res/OUTPUT/At-seeds-Col_1-03-germination_data.csv | wc -l) -gt 1 ]
+then
+        echo "PASSED: seed dimension measurement module"
+        RET1=0
+else
+        echo "FAILED: seed dimension measurement module"
+        RET1=1
+fi
+
 echo "##########################################"
 echo "Testing seed germination assessment module"
 echo "##########################################"
@@ -30,3 +39,14 @@ python src/seed_germination.py \
         --shoot_axis_ratio_min_diff=0.5 \
         --seed_axis_ratio_min_diff=0.2 \
         --compute_areas True
+if [ $(cat res/OUTPUT/At-germination-no-marker-1-germination_data.csv | wc -l) -gt 0 ]
+then
+        echo "PASSED: seed germination assessment module"
+        RET2=0
+else
+        echo "FAILED: seed germination assessment module"
+        RET2=1
+fi
+
+### error codes: 0 for success, 1 for one error, and 2 for 2 errors
+return $(echo "$RET1 + $RET2" | bc)
