@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: 3.9
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -14,10 +14,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          sudo apt install -y python3-pip
-          sudo apt install -y git curl libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0
-          sudo apt install -y python3-wxgtk4.0
-          sudo apt install -y dpkg-dev build-essential python3.9-dev libpython3.9-dev freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev libgstr>
+          sudo apt-get install -y python3-pip
+          sudo apt-get install -y git curl libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0
+          sudo apt-get install -y python3-wxgtk4.0
+          sudo apt-get install -y dpkg-dev build-essential python3.9-dev libpython3.9-dev freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev libgstr>
           pip install numpy scipy scikit-image opencv-python matplotlib tqdm Gooey
       - name:  Test using "test/test.sh"
         run: test/test.sh'
