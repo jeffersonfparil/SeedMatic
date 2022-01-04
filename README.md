@@ -7,19 +7,17 @@ Seed phenotying and germination measurements using coloured photographs.
 
 ## Aims
 Measure the following seed phenotypes:
-
-    - germination rate,
-    - projected area,
-    - volume, and
-    - dimensions (e.g. length and width).
+- germination rate,
+- projected area,
+- volume, and
+- dimensions (e.g. length and width).
 
 These phenotypes can affect the following ecologically and agriculturally important seed traits:
-
-   - dispersion,
-   - viability,
-   - longevity,
-   - dormancy, and
-   - yield in grain crops for example.
+- dispersion,
+- viability,
+- longevity,
+- dormancy, and
+- yield in grain crops for example.
 
 ## Usage
 ```
