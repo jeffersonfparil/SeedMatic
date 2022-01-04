@@ -17,7 +17,7 @@ These phenotypes can affect the following ecologically and agriculturally import
 - viability,
 - longevity,
 - dormancy, and
-- yield in grain crops for example.
+- yield.
 
 ## Usage
 ```
