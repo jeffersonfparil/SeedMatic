@@ -49,4 +49,4 @@ else
 fi
 
 ### error codes: 0 for success, 1 for one error, and 2 for 2 errors
-return $(echo "$RET1 + $RET2" | bc)
+echo "$RET1 + $RET2" | bc
