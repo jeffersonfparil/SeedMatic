@@ -9,8 +9,8 @@ from skimage import io
 from skimage import segmentation
 from skimage.feature import canny
 import cv2
-# import matplotlib; matplotlib.use('Agg') ### for headless execution
-import matplotlib; matplotlib.use('TkAgg') ### for plotting in interactive mode
+import matplotlib; matplotlib.use('Agg') ### for headless execution
+# import matplotlib; matplotlib.use('TkAgg') ### for plotting in interactive mode
 from matplotlib import pyplot as plt
 
 ### plot image
@@ -33,9 +33,9 @@ def fun_image_show(image, cmap=['viridis','gray','Pastel1'][0], title="", width=
     for i in range(len(image)):
         fig.add_subplot(nrow, ncol, i+1)
         if isinstance(title, list):
-            plt.title(title[i])
+            plt.title(title[i], fontsize=width)
         else:
-            plt.title(title)
+            plt.title(title, fontsize=width)
         nDims = len(image[i].shape)
         if nDims==3:
             plt.imshow(image[i])
@@ -766,14 +766,14 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
     return(arr_germination)
 
 ### seed dimensions
-def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviation=500, plot=False, dir_output=".", suffix_out="", write_out=False, plot_out=False):
+def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], max_convex_hull_deviation=500, plot=False, dir_output=".", suffix_out="", write_out=False, plot_out=False, plot_width=5, plot_height=5):
     #############################################
     ### TEST
     # fname = 'res/At-seeds-Col_1-03.JPG'
     # # fname = 'res/At-seeds-Oy_0-04.JPG'
-    # shoot_area_limit = [5000, np.Infinity]
-    # max_deviation = 500
-    # plot=True; dir_output="."; suffix_out=""; write_out=False; plot_out=False
+    # seed_area_limit = [5000, np.Infinity]
+    # max_convex_hull_deviation = 500
+    # plot=True; dir_output="."; suffix_out=""; write_out=False; plot_out=False; plot_width=5; plot_height=5
     #############################################
     ### image extension name or filename suffix
     extension_name = fname.split(".")[-1]
@@ -819,7 +819,7 @@ def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviati
         moments = cv2.moments(cnt)
         area = moments["m00"]
         ### filter by area
-        if (area < shoot_area_limit[0]) or (area > shoot_area_limit[1]):
+        if (area < seed_area_limit[0]) or (area > seed_area_limit[1]):
             continue
         ### filter by coinvexity, i.e. to remove overlapping seeds
         hull = cv2.convexHull(cnt, returnPoints=False)
@@ -829,7 +829,7 @@ def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviati
             continue
         X = np.reshape(defects, (len(defects), 4))
         mean_deviation = round(np.mean(X[:,3]))
-        if mean_deviation > max_deviation:
+        if mean_deviation > max_convex_hull_deviation:
             continue
         ### fit an ellipse to the contour and calculate the ratio between the major and minor axes
         (x,y), (minorAxisLength, majorAxisLength), angle = cv2.fitEllipse(cnt)
@@ -854,7 +854,7 @@ def fun_seed_dimensions(fname, shoot_area_limit=[5000, np.Infinity], max_deviati
     if plot_out:
         fun_image_show([edges, image],
                         title=["Edges", "Annotated"],
-                        width=5, height=5, save=plot_out)
+                        width=plot_width, height=plot_height, save=plot_out)
         plt.savefig(fname_out_jpg)
         plt.close()
     ### return
