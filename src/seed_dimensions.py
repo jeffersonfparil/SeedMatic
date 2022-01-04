@@ -45,6 +45,12 @@ def main():
     input_directory = args["input_directory"] #.input_directory
     extension_name = args["extension_name"] #.extension_name
     output_directory = args["output_directory"] #.output_directory
+    if output_directory == ".":
+        output_directory = os.path.join(input_directory, "OUTPUT")
+    try:
+        os.mkdir(output_directory)
+    except:
+        0
     seed_area_minimum = args["seed_area_minimum"]
     seed_area_maximum = args["seed_area_maximum"]
     max_convex_hull_deviation = args["max_convex_hull_deviation"]

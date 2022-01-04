@@ -202,7 +202,7 @@ def main():
     ap.add_argument("-g", "--seed_axis_ratio_min_diff", type=float, default=0.2,
         help="Minimum absolute difference between 0.5 and the ratio between the seeds' major and minor axes.")
     ap.add_argument("-k", "--explore_parameter_ranges", type=str, default="False",
-        help="Explore range of input parameters to find the most suitable. RECOMENDATION: Use a small subset of photographs with known counts, e.g. 0.0, 1.0, and 0.5 germination rates.")
+        help="Explore range of input parameters to find the most suitable. RECOMMENDATION: Use a small subset of photographs with known counts, e.g. 0.0, 1.0, and 0.5 germination rates.")
     ap.add_argument("-q", "--explore_parameter_ranges_lengths", type=str, default="[1, 3, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1]",
         help="Length of the range of input parameters to explore. Needs to be 14 in total for the 14 parameters we're exploring, i.e. test_blur_threshold, test_vec_plate_radius_or_height_limit, test_vec_RGB_mode_expected, test_dic_fracThesholds, test_shoot_area_limit, test_vec_green_hue_limit, test_vec_green_sat_limit, test_vec_green_val_limit, test_seed_area_limit, test_vec_seed_hue_limit, test_vec_seed_sat_limit, test_vec_seed_val_limit, test_shoot_axis_ratio_min_diff, test_seed_axis_ratio_min_diff.")
     ap.add_argument("-r", "--compute_areas", type=str, default="False",
