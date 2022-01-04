@@ -12,7 +12,7 @@ echo "##########################################"
 echo "Testing seed germination assessment module"
 echo "##########################################"
 time \
-python3 ${DIR_SRC}/main.py \
+python src/seed_germination.py \
         -i res/ \
         -e JPG \
         --vec_plate_radius_or_height_limit "[800,1500]" \
