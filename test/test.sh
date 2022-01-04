@@ -9,4 +9,3 @@ time python seed_dimensions.py \
                 -e jpeg \
                 -W 20 \
                 -H 20
-
