@@ -6,17 +6,18 @@ Seed phenotying and germination measurements using coloured photographs.
 | <a href="https://adaptive-evolution.biosciences.unimelb.edu.au/"><img src="https://adaptive-evolution.biosciences.unimelb.edu.au/Adaptive%20Evolution%20Logo%20mod.png" width="150"></a> | <a href="https://github.com/jeffersonfparil/SeedMatic/actions"><img src="https://github.com/jeffersonfparil/SeedMatic/actions/workflows/python.yml/badge.svg"></a> | [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) |
 
 ## Aims
-Estimate seed phenotypes e.g.:
-- projected area,
-- volume, and
-- dimensions (e.g. length and width).
+Measure the following seed phenotypes:
+    - germination rate,
+    - projected area,
+    - volume, and
+    - dimensions (e.g. length and width).
 
 These phenotypes can affect the following ecologically and agriculturally important seed traits:
    - dispersion,
    - viability,
    - longevity,
    - dormancy, and
-   - yield (i.e. grain crops)
+   - yield in grain crops for example.
 
 ## Usage
 ```
