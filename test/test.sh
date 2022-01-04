@@ -15,9 +15,9 @@ time \
 python src/seed_germination.py \
         -i res/ \
         -e JPG \
-        --vec_plate_radius_or_height_limit "[800,1500]" \
+        --vec_plate_radius_or_height_limit "[500,800]" \
         --vec_plate_width_limit None \
-        --central_round_plate False \
+        --central_round_plate True \
         --vec_RGB_mode_expected None \
         --shoot_area_limit="[100, 1000000]" \
         --vec_green_hue_limit="[60/360, 140/360]" \

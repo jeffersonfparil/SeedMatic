@@ -1,23 +1,61 @@
-**seedMatic**: a flexible automated seed phenotyping and germination scorer from coloured photographs + seedling phenotyping
+# SeedMatic
+Seed phenotying and germination measurements using coloured photographs.
 
 |**Laboratory**|**Build Status**|**License**|
 |:---:|:---:|:---:|
 | <a href="https://adaptive-evolution.biosciences.unimelb.edu.au/"><img src="https://adaptive-evolution.biosciences.unimelb.edu.au/Adaptive%20Evolution%20Logo%20mod.png" width="150"></a> | <a href="https://github.com/jeffersonfparil/SeedMatic/actions"><img src="https://github.com/jeffersonfparil/SeedMatic/actions/workflows/python.yml/badge.svg"></a> | [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) |
 
-- Seed phenotyping:
-    + Seed size (projected area; also predict volume???)
-    + Seed dimensions (length of major and minor axes)
-    + Their distribution affect:
-        - Dispersion?
-        - Viability?
-        - Longevity?
-        - Dormancy?
-    +Applied context - maybe extended to other crops where seed size is an important yield component?
+## Aims
+Estimate seed phenotypes e.g.:
+- projected area,
+- volume, and
+- dimensions (e.g. length and width).
 
-- Seed germination is an easy/straightforward phenotype to measure - count number of germinated seeds and divide by the total number of seeds
-- In large germination experiments manual counting is labour-intensive.
-- Although little training is required to measure germination rate, labour costs can become too large and human-error is unavoidable.
-- There is no shortage of attempts to automate seed germination measurements and seed phenotyping.
-- The main aim is to improve throughput, precision and accuracy.
-- Throughput improves by allowing the computer/machine to measure germination rates quickly and without break.
-- Precision and accuracy improve by removing the human element, i.e. computer codes never get tired and repeat the programmed instructions precisely every time.
+These phenotypes can affect the following ecologically and agriculturally important seed traits:
+   - dispersion,
+   - viability,
+   - longevity,
+   - dormancy, and
+   - yield (i.e. grain crops)
+
+## Usage
+```
+python src/seed_dimensions.py -h
+python src/seed_germination.py -h
+```
+
+## Examples
+```
+echo "##########################################"
+echo "Testing seed dimensions measurement module"
+echo "##########################################"
+time \
+python src/seed_dimensions.py \
+                -i res/ \
+                -e jpeg \
+                -W 20 \
+                -H 20
+echo "##########################################"
+echo "Testing seed germination assessment module"
+echo "##########################################"
+time \
+python src/seed_germination.py \
+        -i res/ \
+        -e JPG \
+        --vec_plate_radius_or_height_limit "[500,800]" \
+        --vec_plate_width_limit None \
+        --central_round_plate True \
+        --vec_RGB_mode_expected None \
+        --shoot_area_limit="[100, 1000000]" \
+        --vec_green_hue_limit="[60/360, 140/360]" \
+        --vec_green_sat_limit="[0.25, 1.00]" \
+        --vec_green_val_limit="[0.25, 1.00]" \
+        --seed_area_limit="[100, 1000000]" \
+        --vec_seed_hue_limit="[0/360, 45/360]" \
+        --vec_seed_sat_limit="[0.30, 1.0]" \
+        --vec_seed_val_limit="[0.00, 1.00]" \
+        --shoot_axis_ratio_min_diff=0.5 \
+        --seed_axis_ratio_min_diff=0.2 \
+        --compute_areas True
+
+```
