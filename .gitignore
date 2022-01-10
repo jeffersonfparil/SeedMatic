@@ -1,3 +1,6 @@
+build/
+dist/
 misc/
-src/__pycache__/
 res/OUTPUT/
+src/__pycache__/
+gui_seed_dimensions.spec

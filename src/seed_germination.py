@@ -158,56 +158,59 @@ def wrapper_fun_frac_shoot_emergence(vec_input, fname,  dir_output, write_out, p
 #################################
 def main():
     ### extract user inputs
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--input_directory", required=True,
+    ap = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    ap._action_groups.pop()
+    compulsaryArgs = ap.add_argument_group('Compulsary argument')
+    compulsaryArgs.add_argument("-i", "--input_directory", required=True,
         help="Input directory of images.")
-    ap.add_argument("-e", "--extension_name", type=str, default="jpg",
+    optionalArgs = ap.add_argument_group('Optional arguments')
+    optionalArgs.add_argument("-e", "--extension_name", type=str, default="jpg",
         help="Extension name of input images.")
-    ap.add_argument("-o", "--output_directory", type=str, default=".",
+    optionalArgs.add_argument("-o", "--output_directory", type=str, default="<input_directory>/OUTPUT",
         help="Output directory.")
-    ap.add_argument("-b", "--blur_threshold", type=int, default=1000,
+    optionalArgs.add_argument("-b", "--blur_threshold", type=int, default=1000,
         help="Minimum Laplacian variance threshold below which the image is deemed blurry.")
-    ap.add_argument("-j", "--plate_shape", type=str, default="round",
+    optionalArgs.add_argument("-j", "--plate_shape", type=str, default="round",
         help="Plate shape. Choose from 'round' or 'rectangular'.")
-    ap.add_argument("-p", "--vec_plate_radius_or_height_limit", type=str, default="[1000, 2000]",
+    optionalArgs.add_argument("-p", "--vec_plate_radius_or_height_limit", type=str, default="[1000, 2000]",
         help="Minimum and maximum expected plate radius or height in pixels. Enter as '-p 1000,2000' or -p \"[1000, 2000]\", etc...")
-    ap.add_argument("-z", "--vec_plate_width_limit", type=str, default="None",
+    optionalArgs.add_argument("-z", "--vec_plate_width_limit", type=str, default="None",
         help="Minimum and maximum expected plate width in pixels. Enter as '-p 1000,2000' or -p \"[1000, 2000]\", etc...")
-    ap.add_argument("-C", "--central_round_plate", type=str, default="True",
+    optionalArgs.add_argument("-C", "--central_round_plate", type=str, default="True",
         help="Find the central round plate if True; else find the best fitting round plate.")
-    ap.add_argument("-m", "--vec_RGB_mode_expected", type=str, default="[45, 55, 75]",
+    optionalArgs.add_argument("-m", "--vec_RGB_mode_expected", type=str, default="[45, 55, 75]",
         help="Expected colour of the most common pixel after black. Express in RGB values ranging from 0 to 255. Enter as '-m 45,55,75' or -m \"[45, 75,55]\" etc...")
-    ap.add_argument("-f", "--flatten_additional", action='append', default=['grayscale', '0.2125', '0.7154', '0.0721', 'red', '1.0', '0.0', '0.0', 'green', '0.0', '1.0', '0.0'],
+    optionalArgs.add_argument("-f", "--flatten_additional", action='append', default=['grayscale', '0.2125', '0.7154', '0.0721', 'red', '1.0', '0.0', '0.0', 'green', '0.0', '1.0', '0.0'],
         help="Additional dictionary item/s for image flattening. Includes the key name and the three RGB value coefficients. Enter as '-f blue,0.0,0.0,1.0 -f red_green,0.5,0.5,0.0 etc...")
-    ap.add_argument("-t", "--flatten_additional_area_thresh", action='append', default=['grayscale', '0.2', 'red', '0.2', 'green', '0.2'],
+    optionalArgs.add_argument("-t", "--flatten_additional_area_thresh", action='append', default=['grayscale', '0.2', 'red', '0.2', 'green', '0.2'],
         help="Additional dictionary item/s for image flattening maximum area threshold. Includes the key name the same as the one used in --flatten_additional and maximum expected fraction of area kept after filtering. Enter as '-t blue,0.2 -t red_green,0.5 etc...")
-    ap.add_argument("-s", "--shoot_area_limit", type=str, default="[100, 10000]",
+    optionalArgs.add_argument("-s", "--shoot_area_limit", type=str, default="[100, 10000]",
         help="Minimum and maximum expected area of shoots in pixels. Enter as '-s 100,10000' or -s \"[100, 10000]\", etc...")
-    ap.add_argument("-u", "--vec_green_hue_limit", type=str, default="[60/360, 150/360]",
+    optionalArgs.add_argument("-u", "--vec_green_hue_limit", type=str, default="[60/360, 150/360]",
         help="Minimum and maximum expected hue of green shoots ranging from 0 to 1. Enter as '-u 0.17,0.42' or -u \"[60/360, 150/360]\", etc...")
-    ap.add_argument("-a", "--vec_green_sat_limit", type=str, default="[0.25, 1.00]",
+    optionalArgs.add_argument("-a", "--vec_green_sat_limit", type=str, default="[0.25, 1.00]",
         help="Minimum and maximum expected saturation values of green shoots ranging from 0 to 1. Enter as '-a 0.25,1.00' or -a \"[0.25, 1.00]\", etc...")
-    ap.add_argument("-v", "--vec_green_val_limit", type=str, default="[0.25, 1.00]",
+    optionalArgs.add_argument("-v", "--vec_green_val_limit", type=str, default="[0.25, 1.00]",
         help="Minimum and maximum expected values of green shoots ranging from 0 to 1. Enter as '-v 0.25,1.00' or -v \"[0.25, 1.00]\", etc...")
-    ap.add_argument("-l", "--seed_area_limit", type=str, default="[100, 1000]",
+    optionalArgs.add_argument("-l", "--seed_area_limit", type=str, default="[100, 1000]",
         help="Minimum and maximum expected area of seeds in pixels. Enter as '-l 100,1000' or -l \"[100, 1000]\", etc...")
-    ap.add_argument("-w", "--vec_seed_hue_limit", type=str, default="[50/360, 180/360]",
+    optionalArgs.add_argument("-w", "--vec_seed_hue_limit", type=str, default="[50/360, 180/360]",
         help="Minimum and maximum expected hue of seeds ranging from 0 to 1. Enter as '-w 0.14,0.50' or -w \"[50/360, 180/360]\", etc...")
-    ap.add_argument("-x", "--vec_seed_sat_limit", type=str, default="[0.20, 1.00]",
+    optionalArgs.add_argument("-x", "--vec_seed_sat_limit", type=str, default="[0.20, 1.00]",
         help="Minimum and maximum expected saturation values of seeds ranging from 0 to 1. Enter as '-x 0.20,1.00' or -x \"[0.20, 1.00]\", etc...")
-    ap.add_argument("-y", "--vec_seed_val_limit", type=str, default="[0.30, 1.00]",
+    optionalArgs.add_argument("-y", "--vec_seed_val_limit", type=str, default="[0.30, 1.00]",
         help="Minimum and maximum expected values of seeds ranging from 0 to 1. Enter as '-y 0.30,1.00' or -y \"[0.30, 1.00]\", etc...")
-    ap.add_argument("-c", "--shoot_axis_ratio_min_diff", type=float, default=0.5,
+    optionalArgs.add_argument("-c", "--shoot_axis_ratio_min_diff", type=float, default=0.5,
         help="Minimum absolute difference between 0.5 and the ratio between the shoots' major and minor axes.")
-    ap.add_argument("-g", "--seed_axis_ratio_min_diff", type=float, default=0.2,
+    optionalArgs.add_argument("-g", "--seed_axis_ratio_min_diff", type=float, default=0.2,
         help="Minimum absolute difference between 0.5 and the ratio between the seeds' major and minor axes.")
-    ap.add_argument("-k", "--explore_parameter_ranges", type=str, default="False",
+    optionalArgs.add_argument("-k", "--explore_parameter_ranges", type=str, default="False",
         help="Explore range of input parameters to find the most suitable. RECOMMENDATION: Use a small subset of photographs with known counts, e.g. 0.0, 1.0, and 0.5 germination rates.")
-    ap.add_argument("-q", "--explore_parameter_ranges_lengths", type=str, default="[1, 3, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1]",
+    optionalArgs.add_argument("-q", "--explore_parameter_ranges_lengths", type=str, default="[1, 3, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1]",
         help="Length of the range of input parameters to explore. Needs to be 14 in total for the 14 parameters we're exploring, i.e. test_blur_threshold, test_vec_plate_radius_or_height_limit, test_vec_RGB_mode_expected, test_dic_fracThesholds, test_shoot_area_limit, test_vec_green_hue_limit, test_vec_green_sat_limit, test_vec_green_val_limit, test_seed_area_limit, test_vec_seed_hue_limit, test_vec_seed_sat_limit, test_vec_seed_val_limit, test_shoot_axis_ratio_min_diff, test_seed_axis_ratio_min_diff.")
-    ap.add_argument("-r", "--compute_areas", type=str, default="False",
+    optionalArgs.add_argument("-r", "--compute_areas", type=str, default="False",
         help="Estimate shoot and combined seed/root areas.")
-    ap.add_argument("-d", "--debug", type=str, default="False",
+    optionalArgs.add_argument("-d", "--debug", type=str, default="False",
         help="Debug.")
     ### parse user inputs
     args = vars(ap.parse_args())
@@ -215,7 +218,7 @@ def main():
     input_directory = args["input_directory"] #.input_directory
     extension_name = args["extension_name"] #.extension_name
     output_directory = args["output_directory"] #.output_directory
-    if output_directory == ".":
+    if output_directory == "<input_directory>/OUTPUT":
         output_directory = os.path.join(input_directory, "OUTPUT")
     try:
         os.mkdir(output_directory)

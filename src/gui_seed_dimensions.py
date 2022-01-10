@@ -7,72 +7,76 @@ import numpy as np                      ### Numerical library, mostly for vector
 import multiprocessing                  ### Parallel processing library
 from functools import partial           ### Allows iterating across the first argument while the other arguments are defined - used in designating the input image file to a corresponding thread for execution.
 import tqdm                             ### Progress bar library which allows tracking of parallel processes.
+from functions import *                 ### SeedMatic logic file containing the image processing and analysis functions , i.e. "seedGermCV/src/functions.py"
 import warnings                         ### Warnings library to ignore warnings and render the progress bar readable.
 warnings.filterwarnings("ignore")
-from functions import *                 ### SeedMatic logic file containing the image processing and analysis functions , i.e. "seedGermCV/src/functions.py"
+import warnings
+warnings.filterwarnings("ignore")
+from gooey import Gooey, GooeyParser
 
+
+@Gooey
 def main():
     ### extract user inputs
-    ap = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    ap._action_groups.pop()
-    compulsaryArgs = ap.add_argument_group('Compulsary argument')
-    compulsaryArgs.add_argument("-i", "--input_directory", required=True,
-        help="Input directory of images.")
-    optionalArgs = ap.add_argument_group('Optional arguments')
-    optionalArgs.add_argument("-e", "--extension_name", type=str, default="jpg",
-        help="Extension name of input images.")
-    optionalArgs.add_argument("-o", "--output_directory", type=str, default="<input_directory>/OUTPUT",
-        help="Output directory.")
-    optionalArgs.add_argument("-a", "--seed_area_minimum", type=int, default=5000,
+    parser = GooeyParser(description="Seed dimensions measurement") 
+    parser.add_argument('input_directory', widget="DirChooser")
+    parser.add_argument('extension_name', default="jpg")
+    parser.add_argument('output_directory', widget="DirChooser", default="<input_directory>/OUTPUT")
+    parser.add_argument("-a", "--seed_area_minimum", type=int, default=5000,
         help="Minimum contour area which we classify as seed.")
-    optionalArgs.add_argument("-A", "--seed_area_maximum", type=int, default=np.Infinity,
+    parser.add_argument("-A", "--seed_area_maximum", default=np.Infinity,
         help="Maximum contour area which we classify as seed.")
-    optionalArgs.add_argument("-d", "--max_convex_hull_deviation", type=int, default=500,
+    parser.add_argument("-d", "--max_convex_hull_deviation", type=int, default=500,
         help="Maximum deviation from the convex hull perimeter for which the contour is classified as a single seed.")
-    optionalArgs.add_argument("-s", "--suffix_out", type=str, default="",
+    parser.add_argument("-s", "--suffix_out", type=str, default="",
         help="Optional suffix of the output files.")
-    optionalArgs.add_argument("-w", "--write_out", type=str, default="True",
+    parser.add_argument("-w", "--write_out", type=str, default="True",
+        choices=["True", "False"], widget='Dropdown',
         help="Output seed dimensions csv file per input image?")
-    optionalArgs.add_argument("-P", "--plot_out", type=str, default="True",
+    parser.add_argument("-P", "--plot_out", type=str, default="True",
+        choices=["True", "False"], widget='Dropdown',
         help="Output seed dimensions image segmentation jpeg file per input image?")
-    optionalArgs.add_argument("-W", "--plot_width", type=int, default=5,
+    parser.add_argument("-W", "--plot_width", type=int, default=5,
         help="Plot width in x100 pixels.")
-    optionalArgs.add_argument("-H", "--plot_height", type=int, default=5,
+    parser.add_argument("-H", "--plot_height", type=int, default=5,
         help="Plot length in x100 pixels.")
-    optionalArgs.add_argument("-c", "--concatenate_output", type=str, default="True",
+    parser.add_argument("-c", "--concatenate_output", type=str, default="True",
+        choices=["True", "False"], widget='Dropdown',
         help="Concatenate output csv files.")
-    optionalArgs.add_argument("-f", "--concatenate_output_filename", type=str, default="<output_directory>/merged_output.csv",
+    parser.add_argument("-f", "--concatenate_output_filename", type=str, default="<output_directory>/merged_output.csv",
         help="Filename of the concatenated output csv file.")
     ### parse user inputs
-    args = vars(ap.parse_args())
-    input_directory = args["input_directory"] #.input_directory
-    extension_name = args["extension_name"] #.extension_name
-    output_directory = args["output_directory"] #.output_directory
+    args = parser.parse_args()
+    input_directory = args.input_directory #.input_directory
+    extension_name = args.extension_name #.extension_name
+    output_directory = args.output_directory #.output_directory
     if output_directory == "<input_directory>/OUTPUT":
         output_directory = os.path.join(input_directory, "OUTPUT")
     try:
         os.mkdir(output_directory)
     except:
         0
-    seed_area_minimum = args["seed_area_minimum"]
-    seed_area_maximum = args["seed_area_maximum"]
-    max_convex_hull_deviation = args["max_convex_hull_deviation"]
-    suffix_out = args["suffix_out"]
-    if args["write_out"] == "True":
+    seed_area_minimum = args.seed_area_minimum
+    seed_area_maximum = args.seed_area_maximum
+    if seed_area_maximum == 'inf':
+        seed_area_maximum = np.Infinity
+    max_convex_hull_deviation = args.max_convex_hull_deviation
+    suffix_out = args.suffix_out
+    if args.write_out == "True":
         write_out = True
     else:
         write_out = False
-    if args["plot_out"] == "True":
+    if args.plot_out == "True":
         plot_out = True
     else:
         plot_out = False
-    plot_width = args["plot_width"]
-    plot_height = args["plot_height"]
-    if args["concatenate_output"] == "True":
+    plot_width = args.plot_width
+    plot_height = args.plot_height
+    if args.concatenate_output == "True":
         concatenate_output = True
     else:
         concatenate_output = False
-    concatenate_output_filename = args["concatenate_output_filename"]
+    concatenate_output_filename = args.concatenate_output_filename
     if concatenate_output_filename == "<output_directory>/merged_output.csv":
         concatenate_output_filename = os.path.join(output_directory, "merged_output.csv")
     ##################################################################
@@ -112,6 +116,11 @@ def main():
     print("##############################################################################")
     ### extract image filenames
     vec_filenames = np.sort([os.path.join(input_directory, f) for f in os.listdir(input_directory) if f.endswith(extension_name)])
+    if len(vec_filenames)==0:
+        print("No input image files found in: " + input_directory)
+        print("with extension name: " + extension_name)
+        return(1)
+        exit
     ### setup parallele processing
     n_cores = multiprocessing.cpu_count() - 1
     parallel = multiprocessing.Pool(n_cores)
