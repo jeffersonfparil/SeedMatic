@@ -19,6 +19,27 @@ These phenotypes can affect the following ecologically and agriculturally import
 - dormancy, and
 - yield.
 
+## Quickstart
+
+Use the standalone GUI binaries for Linux, MacOS, and Windows:
+- LINKS here...
+- LINKS here...
+- LINKS here...
+
+## Dependencies for running the python scripts
+```
+python3 -m pip install \
+        numpy \
+        pandas \
+        scikit-image \
+        opencv-python \
+        matplotlib \
+        tqdm \
+        Gooey --user
+```
+
+Note: `argparse`,  `multiprocessing`, and `functools` libraries ship with Python 3 by default.
+
 ## Usage
 
 ### Seed dimensions measurement module:

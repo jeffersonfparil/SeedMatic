@@ -2,7 +2,7 @@ print("#######################")
 print("Measure seed dimensions")
 print("#######################")
 
-import os, argparse                     ### I/O libraries
+import os                               ### I/O libraries
 import numpy as np                      ### Numerical library, mostly for vector, matrix and array operations
 import multiprocessing                  ### Parallel processing library
 from functools import partial           ### Allows iterating across the first argument while the other arguments are defined - used in designating the input image file to a corresponding thread for execution.
@@ -13,7 +13,6 @@ warnings.filterwarnings("ignore")
 import warnings
 warnings.filterwarnings("ignore")
 from gooey import Gooey, GooeyParser
-
 
 @Gooey
 def main():

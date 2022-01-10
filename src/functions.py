@@ -1,12 +1,9 @@
 ### import libraries
-import sys, os
+import os
 import numpy as np
 import pandas as pd
-import scipy
-from scipy import ndimage
 import skimage
 from skimage import io
-from skimage import segmentation
 from skimage.feature import canny
 import cv2
 import matplotlib; matplotlib.use('Agg') ### for headless execution
