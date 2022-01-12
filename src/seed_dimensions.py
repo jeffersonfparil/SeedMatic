@@ -112,6 +112,11 @@ def main():
     print("##############################################################################")
     ### extract image filenames
     vec_filenames = np.sort([os.path.join(input_directory, f) for f in os.listdir(input_directory) if f.endswith(extension_name)])
+    if len(vec_filenames)==0:
+        print("No input image files found in: " + input_directory)
+        print("with extension name: " + extension_name)
+        return(1)
+        exit
     ### setup parallele processing
     n_cores = multiprocessing.cpu_count() - 1
     parallel = multiprocessing.Pool(n_cores)

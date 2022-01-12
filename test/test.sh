@@ -5,7 +5,7 @@ echo "##########################################"
 time \
 python src/seed_dimensions.py \
                 -i res/ \
-                -e jpeg \
+                -e jpg \
                 -W 20 \
                 -H 20
 if [ $(cat res/OUTPUT/At-seeds-Col_1-03-germination_data.csv | wc -l) -gt 1 ]
