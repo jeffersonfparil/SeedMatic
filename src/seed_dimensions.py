@@ -104,6 +104,7 @@ def main():
     print("seed_area_minimum: ", str(seed_area_minimum))
     print("seed_area_maximum: ", str(seed_area_maximum))
     print("max_convex_hull_deviation: ", str(max_convex_hull_deviation))
+    print("n_threads: ", str(n_threads))
     print("suffix_out: ", suffix_out)
     print("write_out: ", str(write_out))
     print("plot_out: ", str(plot_out))
