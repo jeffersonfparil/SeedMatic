@@ -29,6 +29,8 @@ def main():
         help="Maximum contour area which we classify as seed.")
     optionalArgs.add_argument("-d", "--max_convex_hull_deviation", type=int, default=500,
         help="Maximum deviation from the convex hull perimeter for which the contour is classified as a single seed.")
+    optionalArgs.add_argument("-t", "--n_threads", type=int, default=1,
+        help="Number of computing threads to use.")
     optionalArgs.add_argument("-s", "--suffix_out", type=str, default="",
         help="Optional suffix of the output files.")
     optionalArgs.add_argument("-w", "--write_out", type=str, default="True",
@@ -57,6 +59,7 @@ def main():
     seed_area_minimum = args["seed_area_minimum"]
     seed_area_maximum = args["seed_area_maximum"]
     max_convex_hull_deviation = args["max_convex_hull_deviation"]
+    n_threads = args["n_threads"]
     suffix_out = args["suffix_out"]
     if args["write_out"] == "True":
         write_out = True
@@ -118,8 +121,11 @@ def main():
         return(1)
         exit
     ### setup parallele processing
-    n_cores = multiprocessing.cpu_count() - 1
-    parallel = multiprocessing.Pool(n_cores)
+    try:
+        parallel = multiprocessing.Pool(n_threads)
+    except:
+        n_threads = multiprocessing.cpu_count()
+        parallel = multiprocessing.Pool(n_threads)
     ### parallel processing
     for result in tqdm.tqdm(parallel.imap_unordered(partial(fun_seed_dimensions,
                                                                 seed_area_limit=[seed_area_minimum, seed_area_maximum],

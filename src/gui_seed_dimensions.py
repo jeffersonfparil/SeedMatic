@@ -27,6 +27,8 @@ def main():
         help="Maximum contour area which we classify as seed.")
     parser.add_argument("-d", "--max_convex_hull_deviation", type=int, default=500,
         help="Maximum deviation from the convex hull perimeter for which the contour is classified as a single seed.")
+    parser.add_argument("-t", "--n_threads", type=int, default=1,
+        help="Number of computing threads to use.")
     parser.add_argument("-s", "--suffix_out", type=str, default="",
         help="Optional suffix of the output files.")
     parser.add_argument("-w", "--write_out", type=str, default="True",
@@ -60,6 +62,7 @@ def main():
     if seed_area_maximum == 'inf':
         seed_area_maximum = np.Infinity
     max_convex_hull_deviation = args.max_convex_hull_deviation
+    n_threads = args.n_threads
     suffix_out = args.suffix_out
     if args.write_out == "True":
         write_out = True
@@ -86,6 +89,7 @@ def main():
     # seed_area_minimum = 5000
     # seed_area_maximum = np.Infinity
     # max_convex_hull_deviation = 500
+    # n_threads = 3
     # suffix_out = ""
     # write_out = True
     # plot_out = True
@@ -104,6 +108,7 @@ def main():
     print("seed_area_minimum: ", str(seed_area_minimum))
     print("seed_area_maximum: ", str(seed_area_maximum))
     print("max_convex_hull_deviation: ", str(max_convex_hull_deviation))
+    print("n_threads: ", str(n_threads))
     print("suffix_out: ", suffix_out)
     print("write_out: ", str(write_out))
     print("plot_out: ", str(plot_out))
@@ -121,8 +126,11 @@ def main():
         return(1)
         exit
     ### setup parallele processing
-    n_cores = multiprocessing.cpu_count() - 1
-    parallel = multiprocessing.Pool(n_cores)
+    try:
+        parallel = multiprocessing.Pool(n_threads)
+    except:
+        n_threads = multiprocessing.cpu_count()
+        parallel = multiprocessing.Pool(n_threads)
     ### parallel processing
     for result in tqdm.tqdm(parallel.imap_unordered(partial(fun_seed_dimensions,
                                                                 seed_area_limit=[seed_area_minimum, seed_area_maximum],
