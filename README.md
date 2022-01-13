@@ -18,14 +18,13 @@ These phenotypes can affect the following ecologically and agriculturally import
 
 Use the standalone GUI binaries for Linux, Windows, and Mac OS:
 - Seed dimensions mesurement
-
-        - [Linux 64-bit](https://gitlab.com/jeffersonfparil/seedmatic-binaries/-/blob/main/gui_seed_dimensions)
-        - [Windows 64-bit](https://gitlab.com/jeffersonfparil/seedmatic-binaries/-/blob/main/gui_seed_dimensions.exe)
-        - [Mac OS Monterey or Big Sur or Catalina not yet available]
+  - [Linux 64-bit](https://gitlab.com/jeffersonfparil/seedmatic-binaries/-/blob/main/gui_seed_dimensions)
+  - [Windows 64-bit](https://gitlab.com/jeffersonfparil/seedmatic-binaries/-/blob/main/gui_seed_dimensions.exe)
+  - [Mac OS Monterey or Big Sur or Catalina not yet available]
 
 - Seed germnation assessment
 
-        - Not yet available
+  - Not yet available
 
 ## Dependencies for running the python scripts
 ```
