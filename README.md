@@ -1,5 +1,5 @@
 # SeedMatic
-Seed phenotying and germination measurements using coloured photographs.
+Seed phenotying and germination assessment using photographs.
 
 |**Laboratory**|**Build Status**|**License**|
 |:---:|:---:|:---:|
