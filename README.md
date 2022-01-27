@@ -42,6 +42,8 @@ python3 -m pip install \
 Notes:
 - `argparse`,  `multiprocessing`, and `functools` libraries ship with Python 3 by default.
 - May need to install `libgtk-3-dev` and `python3-wxgtk4.0` for your operating system to install `wxpython` and `Gooey`.
+- Also, `pillow` upgrade may be required: `python3 -m pip install --upgrade Pillow`
+- Additionally, a standalone executable file can be generated with `pyinstaller` (`python3 -m pip install pyinstaller`), i.e. `python3 -m PyInstaller --onefile src/gui_seed_dimensions.py`
 
 ## Usage
 
