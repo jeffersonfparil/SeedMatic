@@ -19,6 +19,7 @@ These phenotypes can affect the following ecologically and agriculturally import
 Use the standalone GUI binaries for Linux, Windows, and Mac OS:
 - Seed dimensions mesurement
   - [Linux 64-bit](https://gitlab.com/jeffersonfparil/seedmatic-binaries/-/blob/main/gui_seed_dimensions)
+  - [Add another linux 64-bit if GLIBC_2.33 is not found]
   - [Windows 64-bit](https://gitlab.com/jeffersonfparil/seedmatic-binaries/-/blob/main/gui_seed_dimensions.exe)
   - [Mac OS Monterey or Big Sur or Catalina not yet available]
 
@@ -38,7 +39,9 @@ python3 -m pip install \
         Gooey --user
 ```
 
-Note: `argparse`,  `multiprocessing`, and `functools` libraries ship with Python 3 by default.
+Notes:
+- `argparse`,  `multiprocessing`, and `functools` libraries ship with Python 3 by default.
+- May need to install `libgtk-3-dev` and `python3-wxgtk4.0` for your operating system to install `wxpython` and `Gooey`.
 
 ## Usage
 
