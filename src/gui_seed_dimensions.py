@@ -25,8 +25,10 @@ def main():
         help="Minimum contour area which we classify as seed.")
     parser.add_argument("-A", "--seed_area_maximum", default=np.Infinity,
         help="Maximum contour area which we classify as seed.")
-    parser.add_argument("-d", "--max_convex_hull_deviation", type=int, default=500,
-        help="Maximum deviation from the convex hull perimeter for which the contour is classified as a single seed.")
+    parser.add_argument("-m", "--convex_hull_deviation_minimum", type=int, default=200,
+        help="Minimum deviation from the convex hull perimeter for which the contour is classified as a single seed, and oriented in the canonically stable position.")
+    parser.add_argument("-M", "--convex_hull_deviation_maximum", type=int, default=500,
+        help="Maximum deviation from the convex hull perimeter for which the contour is classified as a single seed, and oriented in the canonically stable position.")
     parser.add_argument("-t", "--n_threads", type=int, default=1,
         help="Number of computing threads to use.")
     parser.add_argument("-s", "--suffix_out", type=str, default="",
@@ -61,7 +63,8 @@ def main():
     seed_area_maximum = args.seed_area_maximum
     if seed_area_maximum == 'inf':
         seed_area_maximum = np.Infinity
-    max_convex_hull_deviation = args.max_convex_hull_deviation
+    convex_hull_deviation_minimum = args.convex_hull_deviation_minimum
+    convex_hull_deviation_maximum = args.convex_hull_deviation_maximum
     n_threads = args.n_threads
     suffix_out = args.suffix_out
     if args.write_out == "True":
@@ -88,7 +91,7 @@ def main():
     # output_directory = "/home/jeff/Documents/SeedMatic/misc/test_out"
     # seed_area_minimum = 5000
     # seed_area_maximum = np.Infinity
-    # max_convex_hull_deviation = 500
+    # convex_hull_deviation_maximum = 500
     # n_threads = 3
     # suffix_out = ""
     # write_out = True
@@ -107,7 +110,8 @@ def main():
     print("output_directory: ", output_directory)
     print("seed_area_minimum: ", str(seed_area_minimum))
     print("seed_area_maximum: ", str(seed_area_maximum))
-    print("max_convex_hull_deviation: ", str(max_convex_hull_deviation))
+    print("convex_hull_deviation_minimum: ", str(convex_hull_deviation_minimum))
+    print("convex_hull_deviation_maximum: ", str(convex_hull_deviation_maximum))
     print("n_threads: ", str(n_threads))
     print("suffix_out: ", suffix_out)
     print("write_out: ", str(write_out))
@@ -134,7 +138,7 @@ def main():
     ### parallel processing
     for result in tqdm.tqdm(parallel.imap_unordered(partial(fun_seed_dimensions,
                                                                 seed_area_limit=[seed_area_minimum, seed_area_maximum],
-                                                                max_convex_hull_deviation=max_convex_hull_deviation,
+                                                                convex_hull_deviation_limit=[convex_hull_deviation_minimum, convex_hull_deviation_maximum],
                                                                 plot=False,
                                                                 dir_output=output_directory,
                                                                 suffix_out=suffix_out,

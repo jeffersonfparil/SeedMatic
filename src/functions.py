@@ -763,13 +763,13 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
     return(arr_germination)
 
 ### seed dimensions
-def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], max_convex_hull_deviation=500, plot=False, dir_output=".", suffix_out="", write_out=False, plot_out=False, plot_width=5, plot_height=5):
+def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], convex_hull_deviation_limit=[300, 500], plot=False, dir_output=".", suffix_out="", write_out=False, plot_out=False, plot_width=5, plot_height=5):
     #############################################
     ### TEST
     # fname = 'res/At-seeds-Col_1-03.JPG'
     # # fname = 'res/At-seeds-Oy_0-04.JPG'
     # seed_area_limit = [5000, np.Infinity]
-    # max_convex_hull_deviation = 500
+    # convex_hull_deviation_limit = [300, 500]
     # plot=True; dir_output="."; suffix_out=""; write_out=False; plot_out=False; plot_width=5; plot_height=5
     #############################################
     ### image extension name or filename suffix
@@ -807,7 +807,7 @@ def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], max_convex_h
     ### find the contours of the flattened image with the filled seed contours
     contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     ### iterate across contours and find the seed areas and dimensions
-    vec_area_length_width = []
+    vec_area_length_width_HSV = []
     for i in range(len(contours)):
         # i = 8127
         # print(i)
@@ -818,7 +818,7 @@ def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], max_convex_h
         ### filter by area
         if (area < seed_area_limit[0]) or (area > seed_area_limit[1]):
             continue
-        ### filter by coinvexity, i.e. to remove overlapping seeds
+        ### filter by coinvexity, i.e. to remove overlapping seeds, and deormed seeds including seeds in non-canonical stable position
         hull = cv2.convexHull(cnt, returnPoints=False)
         try:
             defects = cv2.convexityDefects(cnt,hull)
@@ -826,25 +826,30 @@ def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], max_convex_h
             continue
         X = np.reshape(defects, (len(defects), 4))
         mean_deviation = round(np.mean(X[:,3]))
-        if mean_deviation > max_convex_hull_deviation:
+        if (mean_deviation < convex_hull_deviation_limit[0]) or (mean_deviation > convex_hull_deviation_limit[1]):
             continue
         ### fit an ellipse to the contour and calculate the ratio between the major and minor axes
         (x,y), (minorAxisLength, majorAxisLength), angle = cv2.fitEllipse(cnt)
         axis_ratio = minorAxisLength / (minorAxisLength + majorAxisLength)
+        ### Extract average color of the seed in HSV colour space
+        mask = np.zeros(image.shape[:2], dtype=np.uint8)
+        cv2.drawContours(mask, [cnt], -1, 255, -1)
+        vec_means = cv2.mean(image, mask=mask)[0:3]
+        H, S, V = skimage.color.rgb2hsv(np.repeat([vec_means], 4, axis=0))[0]
         ### annotate image
         ### append bounding rectangle
         x, y, w, h = cv2.boundingRect(cnt)
         cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
         ### append text
-        label = str(i) + ": " + str(round(area)) + "; " + str(round(majorAxisLength)) + "; " + str(round(minorAxisLength))
+        label = str(i) + ": " + str(round(area)) + "; " + str(round(majorAxisLength/minorAxisLength,4)) + "; " + str(round(mean_deviation)) + "; " + str(round(H,4))
         cv2.putText(image, label, (x+int(w/2),y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2, cv2.LINE_AA)
         ### append seed area and dimensions
-        vec_area_length_width.append([fname, area, majorAxisLength, minorAxisLength])
+        vec_area_length_width_HSV.append([fname, area, majorAxisLength, minorAxisLength, H, S, V])
     ### plot
     if plot:
         fun_image_show([edges, image], title=["Edges", "Annotated"])
     ### output
-    OUT = pd.DataFrame(vec_area_length_width, columns=["ID", "area", "length", "width"])
+    OUT = pd.DataFrame(vec_area_length_width_HSV, columns=["ID", "area", "length", "width", "hue", "saturation", "value"])
     if write_out:
         OUT.to_csv(fname_out_csv, index=False)
     ### save image segmentation output
@@ -856,3 +861,5 @@ def fun_seed_dimensions(fname, seed_area_limit=[5000, np.Infinity], max_convex_h
         plt.close()
     ### return
     return(OUT)
+
+
