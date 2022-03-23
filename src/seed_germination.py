@@ -492,11 +492,8 @@ if __name__ == '__main__':
 # EXTENSION_NAME=JPG
 # time python ${DIR_SRC}/main.py -i ${DIR_INPUT} -e ${EXTENSION_NAME} -o ${DIR_OUTPUT}
 
-# # DIR_SRC="/home/jeff/Documents/seedGermCV/src"
-# # DIR_INPUT="/home/jeff/Downloads/weedomics_large_files/1.c.2.-Avadex/Batch-A-20211012/TEST-seedGermCV-D10"
-# # DIR_OUTPUT="/home/jeff/Downloads/weedomics_large_files/1.c.2.-Avadex/Batch-A-20211012/TEST-seedGermCV-D10"
-# DIR_SRC=/data/weedomics/1.c_60_populations_6_pre_herbicides/seedGermCV/src
-# DIR=/data/weedomics/1.c_60_populations_6_pre_herbicides/1.c.2.-Avadex
+# DIR_SRC=/home/jeffersonfparil/Documents/SeedMatic/src/
+# DIR/home/jeffersonfparil/Downloads/data/1.c.3.-BoxerGold
 # for d1 in $(ls $DIR | grep "^Batch")
 # do
 # for d2 in $(ls ${DIR}/${d1} | grep "^D")

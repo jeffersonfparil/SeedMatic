@@ -640,45 +640,45 @@ def fun_frac_shoot_emergence(fname, dir_output=".", write_out=True, plot_out=Tru
                      debug=False):
     ##################################################################
     ### TEST:
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-29-51.jpg"
-    # # fname = "res/At-germination-with-marker-2.JPG"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-48-51.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-45-45.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-0-49.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-no-marker-46-49.jpg"
-    # # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-no-marker-46-47.jpg"
+    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-29-51.jpg"
+    # fname = "res/At-germination-with-marker-2.JPG"
+    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-48-51.jpg"
+    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-45-45.jpg"
+    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-with-marker-0-49.jpg"
+    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-no-marker-46-49.jpg"
+    # fname = "/home/jeff/Documents/seedGermCV/res/Arabidopsis/At-no-marker-46-47.jpg"
     # fname = "/home/jeff/Downloads/weedomics_large_files/1.c.2.-Avadex/Batch-A-20211012/TEST-seedGermCV-D10/1.c.2-PLATE_3-PHOTO_1-DAY_10.jpg"
-    # fname = "/home/jeff/Downloads/weedomics_large_files/1.c.2.-Avadex/Batch-A-20211012/TEST-seedGermCV-D10/1.c.2-PLATE_17-PHOTO_1-DAY_08.jpg"
-    # import matplotlib; matplotlib.use('TkAgg') ### for plotting in interactive mode
-    # from matplotlib import pyplot as plt
-    # dir_output="."
-    # write_out = False
-    # plot_out = False
-    # suffix_out = ""
-    # blur_threshold = 2000
-    # plate_shape="round"
-    # # vec_plate_radius_or_height_limit = [1000,2000]
-    # vec_plate_radius_or_height_limit = [800,1500]
-    # vec_plate_width_limit = None
-    # central_round_plate = False
-    # # vec_RGB_mode_expected = [45, 55, 75]
-    # vec_RGB_mode_expected = None
-    # dic_flattenTypes = {"grayscale":[0.2125, 0.7154, 0.0721], "red":[1.0, 0.0, 0.0], "green":[0.0, 1.0, 0.0]}
-    # dic_fracThesholds = {"grayscale":0.20, "red":0.20, "green":0.20}
-    # shoot_area_limit=[100, 1000000]
-    # vec_green_hue_limit = [60/360, 140/360]
-    # vec_green_sat_limit = [0.25, 1.00]
-    # vec_green_val_limit = [0.25, 1.00]
-    # seed_area_limit = [100, 1000000]
-    # # vec_seed_hue_limit = [50/360, 115/360]
-    # vec_seed_hue_limit = [0/360, 45/360]
-    # # vec_seed_sat_limit = [0.25, 1.00]
-    # vec_seed_sat_limit = [0.30, 1.0]
-    # # vec_seed_val_limit = [0.40, 1.00]
-    # vec_seed_val_limit = [0.00, 1.00]
-    # shoot_axis_ratio_min_diff=0.5
-    # seed_axis_ratio_min_diff=0.2
-    # debug = False
+    fname = "/home/jeffersonfparil/Downloads/data/1.c.3.-BoxerGold/Batch1-D09/PLATE-001-R1.jpg"
+    import matplotlib; matplotlib.use('TkAgg') ### for plotting in interactive mode
+    from matplotlib import pyplot as plt
+    dir_output="."
+    write_out = False
+    plot_out = False
+    suffix_out = ""
+    blur_threshold = 2000
+    plate_shape="round"
+    # vec_plate_radius_or_height_limit = [1000,2000]
+    vec_plate_radius_or_height_limit = [800,1500]
+    vec_plate_width_limit = None
+    central_round_plate = False
+    # vec_RGB_mode_expected = [45, 55, 75]
+    vec_RGB_mode_expected = None
+    dic_flattenTypes = {"grayscale":[0.2125, 0.7154, 0.0721], "red":[1.0, 0.0, 0.0], "green":[0.0, 1.0, 0.0]}
+    dic_fracThesholds = {"grayscale":0.20, "red":0.20, "green":0.20}
+    shoot_area_limit=[100, 1000000]
+    vec_green_hue_limit = [60/360, 140/360]
+    vec_green_sat_limit = [0.25, 1.00]
+    vec_green_val_limit = [0.25, 1.00]
+    seed_area_limit = [100, 1000000]
+    # vec_seed_hue_limit = [50/360, 115/360]
+    vec_seed_hue_limit = [0/360, 45/360]
+    # vec_seed_sat_limit = [0.25, 1.00]
+    vec_seed_sat_limit = [0.30, 1.0]
+    # vec_seed_val_limit = [0.40, 1.00]
+    vec_seed_val_limit = [0.00, 1.00]
+    shoot_axis_ratio_min_diff=0.5
+    seed_axis_ratio_min_diff=0.2
+    debug = False
     ###############################################################
     ### image extension name or filename suffix
     extension_name = fname.split(".")[-1]
