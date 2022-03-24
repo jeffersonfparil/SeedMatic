@@ -492,34 +492,58 @@ if __name__ == '__main__':
 # EXTENSION_NAME=JPG
 # time python ${DIR_SRC}/main.py -i ${DIR_INPUT} -e ${EXTENSION_NAME} -o ${DIR_OUTPUT}
 
-# DIR_SRC=/home/jeffersonfparil/Documents/SeedMatic/src/
-# DIR/home/jeffersonfparil/Downloads/data/1.c.3.-BoxerGold
-# for d1 in $(ls $DIR | grep "^Batch")
-# do
-# for d2 in $(ls ${DIR}/${d1} | grep "^D")
-# do
-# DIR_INPUT=${DIR}/${d1}/${d2}
-# DIR_OUTPUT=${DIR_INPUT}/OUTPUT
-# EXTENSION_NAME="jpg"
+# DIR_SRC='/home/jeffersonfparil/Documents/SeedMatic/src/'
+# DIR='/home/jeffersonfparil/Downloads/data/1.c.3.-BoxerGold/Batch1-D09---TEST---/'
+# # for d1 in $(ls $DIR | grep "^Batch")
+# # do
+# # for d2 in $(ls ${DIR}/${d1} | grep "^D")
+# # do
+# # DIR_INPUT=${DIR}/${d1}/${d2}
+# # DIR_OUTPUT=${DIR_INPUT}/OUTPUT
+# DIR_OUTPUT=${DIR}/OUTPUT
+# EXTENSION_NAME='jpg'
+
+# blur_threshold='2000'
+# plate_shape='round'
+# vec_plate_radius_or_height_limit='1500,3000'
+# central_round_plate='True'
+# vec_RGB_mode_expected='None'
+# shoot_area_limit='100,1000000'
+# vec_green_hue_limit='0.1666667,0.3888889'
+# vec_green_sat_limit='0.25,1.00'
+# vec_green_val_limit='0.25,1.00'
+# seed_area_limit='100,1000000'
+# vec_seed_hue_limit='0.00,0.125'
+# vec_seed_sat_limit='0.30,1.0'
+# vec_seed_val_limit='0.00,1.00'
+# shoot_axis_ratio_min_diff='0.5'
+# seed_axis_ratio_min_diff='0.2'
+# compute_areas='True'
+# debug='False'
+
+
 # time \
-# python3 ${DIR_SRC}/main.py \
-#         -i ${DIR_INPUT} \
-#         -e ${EXTENSION_NAME} \
-#         -o ${DIR_OUTPUT} \
-#         --vec_plate_radius_or_height_limit "[800,1500]" \
-#         --vec_plate_width_limit None \
-#         --central_round_plate False \
-#         --vec_RGB_mode_expected None \
-#         --shoot_area_limit="[100, 1000000]" \
-#         --vec_green_hue_limit="[60/360, 140/360]" \
-#         --vec_green_sat_limit="[0.25, 1.00]" \
-#         --vec_green_val_limit="[0.25, 1.00]" \
-#         --seed_area_limit="[100, 1000000]" \
-#         --vec_seed_hue_limit="[0/360, 45/360]" \
-#         --vec_seed_sat_limit="[0.30, 1.0]" \
-#         --vec_seed_val_limit="[0.00, 1.00]" \
-#         --shoot_axis_ratio_min_diff=0.5 \
-#         --seed_axis_ratio_min_diff=0.2 \
-#         --compute_areas True
-# done
-# done
+# python3 ${DIR_SRC}/seed_germination.py \
+#         --input_directory ${DIR} \
+#         --extension_name ${EXTENSION_NAME} \
+#         --output_directory ${DIR_OUTPUT} \
+#         --blur_threshold ${blur_threshold} \
+#         --plate_shape ${plate_shape} \
+#         --vec_plate_radius_or_height_limit ${vec_plate_radius_or_height_limit} \
+#         --central_round_plate ${central_round_plate} \
+#         --vec_RGB_mode_expected ${vec_RGB_mode_expected} \
+#         --shoot_area_limit ${shoot_area_limit} \
+#         --vec_green_hue_limit ${vec_green_hue_limit} \
+#         --vec_green_sat_limit ${vec_green_sat_limit} \
+#         --vec_green_val_limit ${vec_green_val_limit} \
+#         --seed_area_limit ${seed_area_limit} \
+#         --vec_seed_hue_limit ${vec_seed_hue_limit} \
+#         --vec_seed_sat_limit ${vec_seed_sat_limit} \
+#         --vec_seed_val_limit ${vec_seed_val_limit} \
+#         --shoot_axis_ratio_min_diff ${shoot_axis_ratio_min_diff} \
+#         --seed_axis_ratio_min_diff ${seed_axis_ratio_min_diff} \
+#         --compute_areas ${compute_areas} \
+#         --debug ${debug}
+# # done
+# # done
+
