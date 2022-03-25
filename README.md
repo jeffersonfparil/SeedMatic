@@ -35,13 +35,13 @@ python3 -m pip install \
         scikit-image \
         opencv-python \
         matplotlib \
-        tqdm \
-        Gooey --user
+        tqdm --user
 ```
 
-Notes:
+## Notes:
 - `argparse`,  `multiprocessing`, and `functools` libraries ship with Python 3 by default.
-- May need to install `libgtk-3-dev` and `python3-wxgtk4.0` for your operating system to install `wxpython` and `Gooey`.
+- If a GUI is preferred, please install `Gooey`, i.e. `python3 -m pip install Gooey --user`
+- In case of `wxpython` installation error, install `libgtk-3-dev` and `python3-wxgtk4.0` for your operating system to install `wxpython` and `Gooey`.
 - Also, `pillow` upgrade may be required: `python3 -m pip install --upgrade Pillow` which also require to change the version of `imageio`: `python3 -m pip uninstall imageio; python3 -m pip install imageio==2.10.5`
 - Additionally, a standalone executable file can be generated with `pyinstaller` (`python3 -m pip install pyinstaller`), i.e. `python3 -m PyInstaller --onefile src/gui_seed_dimensions.py`
 
